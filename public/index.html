@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Crypt Chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="background-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div id="app-container">
+        
+        <div id="auth-view" class="glass-panel">
+            <div class="glass-header">
+                <h2>Crypt Chat</h2>
+                <p>Anonymous and Encrypted</p>
+            </div>
+            
+            <div class="tabs">
+                <button id="tab-create" class="active" onclick="switchTab('create')">Create</button>
+                <button id="tab-join" onclick="switchTab('join')">Join</button>
+            </div>
+
+            <div id="form-create" class="form-section">
+                <div class="input-group">
+                    <input type="text" id="c-room" placeholder=" " required autocomplete="off">
+                    <label>Room ID</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="c-pass" placeholder=" " required>
+                    <label>Password</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="c-duress" placeholder=" " class="duress-input">
+                    <label>Fake Password (Optional)</label>
+                </div>
+                <button class="glass-btn primary" onclick="createRoom()">Initialize Room</button>
+
+                <div class="security-grid">
+                    <div class="sec-item">
+                        <span class="sec-icon">👻</span>
+                        <span class="sec-label">Anonymous</span>
+                    </div>
+                    <div class="sec-item">
+                        <span class="sec-icon">🔒</span>
+                        <span class="sec-label">AES-256</span>
+                    </div>
+                    <div class="sec-item">
+                        <span class="sec-icon">💣</span>
+                        <span class="sec-label">1 Hour Log</span>
+                    </div>
+                    <div class="sec-item">
+                        <span class="sec-icon">⚡</span>
+                        <span class="sec-label">Ram Only</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="form-join" class="form-section hidden">
+                <div class="input-group">
+                    <input type="text" id="j-room" placeholder=" " required autocomplete="off">
+                    <label>Room ID</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="j-pass" placeholder=" " required>
+                    <label>Password</label>
+                </div>
+                <button class="glass-btn primary" onclick="joinRoomInitiate()">Connect</button>
+            </div>
+            
+            <p id="status-msg"></p>
+        </div>
+
+        <div id="chat-view" class="glass-panel hidden">
+            <div class="glass-header chat-header">
+                <div class="room-info">
+                    <span id="room-label">Room</span>
+                    <span id="timer-display">59:59</span>
+                </div>
+                <button class="icon-btn delete-btn" onclick="nukeRoom()" title="Destroy Room">🗑️</button>
+            </div>
+            
+            <div id="messages-container"></div>
+            
+            <div class="glass-footer">
+                <button id="burn-btn" onclick="toggleBurnMode()">
+                    <span>🔥</span>
+                    <small id="burn-text">OFF</small>
+                </button>
+                <input type="text" id="msg-input" placeholder="Type a message..." autocomplete="off">
+                <button class="send-btn" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+
+        <div id="duress-view" class="glass-panel hidden">
+            <div class="glass-header chat-header" style="background: rgba(255,255,255,0.1);">
+                <div class="room-info">
+                    <span>Family Group</span>
+                    <span style="font-size: 12px; opacity: 0.7;">Online</span>
+                </div>
+            </div>
+            <div id="duress-messages"></div>
+            <div class="glass-footer">
+                <input type="text" id="fake-input" placeholder="Message..." autocomplete="off">
+                <button class="send-btn" onclick="sendFakeMessage()">➤</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
