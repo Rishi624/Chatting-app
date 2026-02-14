@@ -1,0 +1,404 @@
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.07);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-blur: 20px;
+    --primary-color: #00d2d3;
+    --text-color: #ffffff;
+    --text-muted: #b2bec3;
+    --bubble-me: rgba(0, 210, 211, 0.3);
+    --bubble-them: rgba(255, 255, 255, 0.1);
+    --danger-color: #ff6b6b;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #0f0f12;
+    color: var(--text-color);
+    overflow: hidden;
+    height: 100vh;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* --- 1. ANIMATED BACKGROUND ORBS --- */
+.background-orbs {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    animation: float 10s infinite alternate ease-in-out;
+}
+.orb-1 {
+    width: 300px; height: 300px;
+    background: #5f27cd;
+    top: 10%; left: 10%;
+}
+.orb-2 {
+    width: 400px; height: 400px;
+    background: #ff9f43;
+    bottom: 10%; right: 10%;
+    animation-delay: -5s;
+}
+.orb-3 {
+    width: 200px; height: 200px;
+    background: #00d2d3;
+    top: 40%; left: 40%;
+    animation-duration: 15s;
+}
+@keyframes float {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(30px, 50px); }
+}
+
+/* --- 2. MAIN LAYOUT (Glass Panel) --- */
+#app-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+.glass-panel {
+    width: 420px;
+    height: 720px;
+    max-height: 95vh;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.hidden { display: none !important; }
+
+/* --- 3. HEADERS --- */
+.glass-header {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--glass-border);
+    text-align: center;
+    flex-shrink: 0;
+}
+.glass-header h2 { margin: 0; font-weight: 600; letter-spacing: 1px; }
+.glass-header p { margin: 5px 0 0; font-size: 12px; color: var(--text-muted); }
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+}
+.room-info { display: flex; flex-direction: column; text-align: left; }
+#room-label { font-weight: bold; font-size: 1.1em; color: white; }
+#timer-display { font-family: 'Courier New', monospace; font-size: 0.9em; color: var(--primary-color); }
+
+/* --- 4. TABS & FORMS --- */
+.tabs {
+    display: flex;
+    margin: 15px 20px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 4px;
+    flex-shrink: 0;
+}
+.tabs button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+.tabs button.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.form-section {
+    padding: 15px 25px 0 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-top: 20px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.form-section::-webkit-scrollbar { display: none; /* Chrome */ }
+
+.input-group { position: relative; margin-bottom: 5px; }
+.input-group input {
+    width: 100%;
+    padding: 15px 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--glass-border);
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box;
+    border-radius: 0;
+}
+.input-group label {
+    position: absolute;
+    top: 15px; left: 10px;
+    color: var(--text-muted);
+    pointer-events: none;
+    transition: 0.3s ease all;
+}
+.input-group input:focus ~ label,
+.input-group input:not(:placeholder-shown) ~ label {
+    top: -5px;
+    font-size: 12px;
+    color: var(--primary-color);
+}
+.input-group input:focus { border-bottom-color: var(--primary-color); }
+
+.glass-btn {
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid var(--glass-border);
+    transition: 0.3s;
+}
+.glass-btn:active { transform: scale(0.98); }
+.glass-btn.primary {
+    background: linear-gradient(135deg, rgba(0, 210, 211, 0.4), rgba(0, 210, 211, 0.1));
+    border-color: rgba(0, 210, 211, 0.5);
+}
+
+#status-msg {
+    text-align: center;
+    color: var(--danger-color);
+    margin-top: 10px;
+    font-size: 14px;
+    min-height: 20px;
+    font-weight: 600;
+}
+
+/* --- 5. SECURITY GRID (Visual Filler) --- */
+.security-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    margin-bottom: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+.sec-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.sec-icon { font-size: 1.1em; }
+.sec-label { font-size: 11px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* --- 6. CHAT MESSAGES --- */
+#messages-container, #duress-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+
+/* Rows & Alignment */
+.msg-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+    width: 100%;
+}
+.row-you { align-items: flex-end; }
+.row-stranger { align-items: flex-start; }
+
+/* Name Labels */
+.sender-name {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    margin-left: 8px;
+    margin-right: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Bubbles */
+.msg-bubble {
+    max-width: 75%;
+    padding: 12px 18px;
+    font-size: 15px;
+    line-height: 1.4;
+    border-radius: 20px;
+    position: relative;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    word-wrap: break-word;
+}
+.msg-you {
+    background: var(--bubble-me);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+    border: 1px solid rgba(0, 210, 211, 0.3);
+}
+.msg-stranger {
+    background: var(--bubble-them);
+    color: #eee;
+    border-bottom-left-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Burn Message Logic */
+.burn-msg {
+    color: transparent !important;
+    min-width: 160px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 107, 107, 0.1) !important;
+    border: 1px solid rgba(255, 107, 107, 0.4) !important;
+    user-select: none;
+}
+.burn-msg::after {
+    content: "🔒 TAP TO DECRYPT";
+    color: var(--danger-color);
+    font-size: 12px;
+    font-weight: 800;
+    position: absolute;
+    letter-spacing: 1px;
+}
+/* Burn Revealed State */
+.burn-msg.revealed {
+    color: #fff !important;
+    background: var(--bubble-them) !important;
+    cursor: default;
+}
+.msg-you.burn-msg.revealed {
+    background: var(--bubble-me) !important;
+}
+.burn-msg.revealed::after { display: none; }
+
+/* --- 7. FOOTER & INPUTS --- */
+.glass-footer {
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-top: 1px solid var(--glass-border);
+    flex-shrink: 0; /* Don't shrink */
+}
+.glass-footer input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 25px;
+    padding: 12px 18px;
+    color: white;
+    font-size: 15px;
+    outline: none;
+}
+
+.icon-btn {
+    background: none; border: none; font-size: 1.3em; cursor: pointer; padding: 5px; opacity: 0.7; transition: 0.3s;
+}
+.icon-btn:hover { opacity: 1; transform: scale(1.1); }
+
+.send-btn {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: var(--primary-color);
+    color: #000;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 210, 211, 0.3);
+}
+
+/* Burn Toggle Button */
+#burn-btn {
+    width: 45px; height: 45px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+#burn-btn span { font-size: 18px; line-height: 1; margin-bottom: 2px; }
+#burn-btn small { font-size: 8px; font-weight: bold; opacity: 0.7; }
+
+#burn-btn.active {
+    border-color: var(--danger-color);
+    background: rgba(255, 107, 107, 0.15);
+    box-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+}
+#burn-btn.active small { color: var(--danger-color); opacity: 1; }
+
+/* --- 8. MOBILE OPTIMIZATION --- */
+@media (max-width: 600px) {
+    .glass-panel {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        max-height: none;
+        border-radius: 0;
+        border: none;
+    }
+    
+    #app-container {
+        align-items: flex-start;
+    }
+    
+    .glass-btn, .tabs button, .input-group input {
+        padding: 18px; 
+    }
+    
+    .security-grid {
+        gap: 10px;
+    }
+}
